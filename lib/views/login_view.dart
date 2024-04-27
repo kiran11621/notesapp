@@ -41,7 +41,7 @@ class _LoginViewState extends State<LoginView> {
             enableSuggestions: false,
             autocorrect: false,
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "Enter Email",
             ),
           ),
@@ -50,25 +50,26 @@ class _LoginViewState extends State<LoginView> {
               obscureText: true,
               enableSuggestions: false,
               autocorrect: false,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Enter Password",
               )),
           TextButton(
             onPressed: () async {
               final email = _email.text;
               final password = _password.text;
-              print('email $email $password');
               try {
-                final userCredential = await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                        email: email, password: password);
+                final userCredential =
+                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/notes/',
+                  (route) => false,
+                );
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
-                  print('User not found');
-                } else if (e.code == 'wrong-password') {
-                  print('Wrong Password');
-                  print(e.code);
-                }
+                } else if (e.code == 'wrong-password') {}
               }
             },
             child: const Text("Login"),
